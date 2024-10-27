@@ -8,13 +8,13 @@ import 'package:ten_twenty_app_test/data/network/api_repository.dart';
 import '../model/movie_reponse_model.dart';
 import '../widgets/bottom_navigation_bar.dart';
 
-
 class WatchScreen extends StatefulWidget {
-  const WatchScreen({super.key});
+  const WatchScreen({super.key,});
 
   @override
   _WatchScreenState createState() => _WatchScreenState();
 }
+
 class _WatchScreenState extends State<WatchScreen> {
   int _selectedIndex = 1;
   bool _isSearching = false;
@@ -40,7 +40,7 @@ class _WatchScreenState extends State<WatchScreen> {
         // Clear the search text when search is turned off
         _searchController.clear();
         // Notify WatchContent to reset the search
-        ( _screens[1] as WatchContent).resetSearch();
+        (_screens[1] as WatchContent).resetSearch();
       }
     });
   }
@@ -51,16 +51,16 @@ class _WatchScreenState extends State<WatchScreen> {
       appBar: AppBar(
         title: _isSearching
             ? TextField(
-          controller: _searchController,
-          decoration: const InputDecoration(
-            hintText: 'Search movies...',
-            border: InputBorder.none,
-          ),
-          onChanged: (query) {
-            final content = _screens[1] as WatchContent;
-            content.updateSearchQuery(query);
-          },
-        )
+                controller: _searchController,
+                decoration: const InputDecoration(
+                  hintText: 'Search movies...',
+                  border: InputBorder.none,
+                ),
+                onChanged: (query) {
+                  final content = _screens[1] as WatchContent;
+                  content.updateSearchQuery(query);
+                },
+              )
             : const Text('Watch'),
         actions: [
           IconButton(
@@ -107,6 +107,7 @@ class _WatchContentState extends State<WatchContent> {
     print('upComingMovies $upComingMovies');
     widget.searchQuery.addListener(_applySearchFilter);
   }
+
   void _fetchAndPrintUpcomingMovies() async {
     upComingMovies = APIRepository().fetchUpcomingMovies();
     // Await the movies to print them
@@ -115,13 +116,16 @@ class _WatchContentState extends State<WatchContent> {
 
     setState(() {}); // Trigger a rebuild to show movies in FutureBuilder
   }
+
   void _applySearchFilter() {
     setState(() {
       final query = widget.searchQuery.value.toLowerCase();
       upComingMovies.then((movies) {
         filteredMovies = query.isEmpty
             ? [] // Reset the filtered list if the query is empty
-            : movies.where((movie) => movie.title.toLowerCase().contains(query)).toList();
+            : movies
+                .where((movie) => movie.title.toLowerCase().contains(query))
+                .toList();
       });
     });
   }
@@ -142,14 +146,17 @@ class _WatchContentState extends State<WatchContent> {
         } else if (snapshot.hasError) {
           return const Center(child: Text('Error loading movies'));
         } else {
-          final movies = filteredMovies.isEmpty && widget.searchQuery.value.isNotEmpty
+          final movies = filteredMovies.isEmpty &&
+                  widget.searchQuery.value.isNotEmpty
               ? [] // If there's a search query but no filtered movies, show an empty list
               : snapshot.data!;
 
           return GridView.builder(
             padding: const EdgeInsets.all(10),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: widget.searchQuery.value.isEmpty ? 1 : 2, // Switch to single column if no search
+              crossAxisCount: widget.searchQuery.value.isEmpty
+                  ? 1
+                  : 2, // Switch to single column if no search
               childAspectRatio: 1.5, // Adjust for suitable movie card size
               mainAxisSpacing: 10,
               crossAxisSpacing: 10,
@@ -165,8 +172,9 @@ class _WatchContentState extends State<WatchContent> {
                   );
                 },
                 child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  margin: const EdgeInsets.symmetric(vertical: 10), 
                   child: Stack(
                     children: [
                       ClipRRect(
@@ -182,7 +190,10 @@ class _WatchContentState extends State<WatchContent> {
                         left: 10,
                         child: Text(
                           movie.title,
-                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
                     ],

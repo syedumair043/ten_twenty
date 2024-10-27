@@ -27,7 +27,7 @@ class APIRepository extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await http.get(Uri.parse(end_point.baseUrl + 'upcoming?api_key=$apiKey'));
+      final response = await http.get(Uri.parse(end_point.baseUrl + end_point.upComingApiUrl));
       print('Response status: ${response.statusCode}');
       print('Response body: ${response.body}');
 

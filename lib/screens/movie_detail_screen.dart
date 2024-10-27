@@ -35,9 +35,8 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<APIRepository>(context, listen: false).fetchGenres()
-    );
+    Future.microtask(
+        () => Provider.of<APIRepository>(context, listen: false).fetchGenres());
   }
 
   List<String> getGenreNames(List<Genre> genres) {
@@ -113,7 +112,11 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                           child: ElevatedButton(
                             onPressed: () {
                               // Action for Get Tickets
-                              GoRouter.of(context).push('/selectSeatScreen');
+
+                              context.push('/selectCinema', extra: {
+                                'name': movie.originalTitle,
+                                'date': formatReleaseDate(movie.releaseDate),
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
@@ -179,7 +182,7 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                 children: [
                   const Text('Genres:', style: TextStyle(fontSize: 24)),
                   const SizedBox(height: 10),
-                 /* Wrap(
+                  /* Wrap(
                     spacing: 8.0, // Horizontal space between chips
                     runSpacing: 8.0, // Vertical space between rows of chips
                     children: getGenreNames().asMap().entries.map((entry) {
@@ -209,11 +212,15 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
                   Wrap(
                     spacing: 8.0,
                     runSpacing: 8.0,
-                    children: getGenreNames(apiRepository.genres).asMap().entries.map((entry) {
+                    children: getGenreNames(apiRepository.genres)
+                        .asMap()
+                        .entries
+                        .map((entry) {
                       int index = entry.key;
                       String name = entry.value;
 
-                      Color backgroundColor = genreColors[index % genreColors.length];
+                      Color backgroundColor =
+                          genreColors[index % genreColors.length];
 
                       return Padding(
                         padding: const EdgeInsets.only(right: 5.0),
@@ -252,4 +259,3 @@ class _MovieDetailScreenState extends State<MovieDetailScreen> {
     );
   }
 }
-
